@@ -1,0 +1,5 @@
+- Use OWIN to Self-Host ASP.NET Web API 2				https://docs.microsoft.com/en-us/aspnet/web-api/overview/hosting-aspnet-web-api/use-owin-to-self-host-web-api
+- Designing a DDD-oriented microservice					https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/ddd-oriented-microservice
+- Implementing a microservice domain model with .NET Core		https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/net-core-microservice-domain-model
+- Implementing CQRS in .NET Part 2: Handling Commands and Events	https://exceptionnotfound.net/implementing-cqrs-in-net-part-2-handling-commands-and-events/
+- CQRS/MediatR implementation patterns					https://lostechies.com/jimmybogard/2016/10/27/cqrsmediatr-implementation-patterns/
