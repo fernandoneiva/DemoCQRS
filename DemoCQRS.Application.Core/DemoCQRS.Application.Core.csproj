@@ -39,6 +39,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandStack\Commands\CreateFaturaCommand.cs" />
     <Compile Include="CommandStack\Commands\SalvarFaturaCommand.cs" />
     <Compile Include="CommandStack\Handlers\FaturasCommandHandler.cs" />
     <Compile Include="QueryStack\Queries\ListarFaturasCommand.cs" />
