@@ -21,11 +21,18 @@ namespace BuildingBlocks.EventBus.Abstractions
 
         void AddSubscription(Type handlerType, string eventName, Type eventType = null);
 
+        void RemoveSubscription<TEventHandler>(string eventName)
+            where TEventHandler : IDynamicEventHandler;
+
+        void RemoveSubscription<TEvent, TEventHandler>()
+            where TEvent : IntegrationEvent
+            where TEventHandler : IEventHandler<TEvent>;
+        
         bool HasSubscriptionsForEvent(string eventName);
 
-        IEnumerable GetHandlersForEvent<TEvent>()
+        IEnumerable<Subscription> GetHandlersForEvent<TEvent>()
             where TEvent : IntegrationEvent;
 
-        IEnumerable GetHandlersForEvent(string eventName);
+        IEnumerable<Subscription> GetHandlersForEvent(string eventName);
     }
 }

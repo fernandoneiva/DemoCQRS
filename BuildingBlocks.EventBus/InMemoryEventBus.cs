@@ -1,5 +1,7 @@
-﻿using BuildingBlocks.EventBus.Abstractions;
+﻿using Autofac;
+using BuildingBlocks.EventBus.Abstractions;
 using BuildingBlocks.EventBus.Events;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,36 +12,49 @@ namespace BuildingBlocks.EventBus
 {
     public class InMemoryEventBus : IEventBus
     {
-        private readonly IEventBusSubscriptionsManager manager = 
+        private readonly IEventBusSubscriptionsManager _manager = 
             new InMemorySubscriptionsManager();
 
-        public void Publish(IntegrationEvent @event)
+        private readonly ILifetimeScope _scope;
+
+        public InMemoryEventBus(ILifetimeScope scope)
         {
-            throw new NotImplementedException();
+            _scope = scope;
+        }
+
+        public async void Publish(IntegrationEvent @event)
+        {
+            var subscriptions = _manager.GetHandlersForEvent(@event.GetType().Name);
+            foreach (var subcription in subscriptions)
+            {
+                var message = JsonConvert.SerializeObject(@event);
+                await subcription.Handle(message, _scope);
+            }
         }
 
         public void Subscribe<TEvent, TEventHandler>()
             where TEvent : IntegrationEvent
             where TEventHandler : IEventHandler<TEvent>
         {
-            throw new NotImplementedException();
+            _manager.AddSubscription<TEvent, TEventHandler>();
         }
 
-        public void Subscribe<TEventHandler>(string eventName) where TEventHandler : IDynamicEventHandler
+        public void Subscribe<TEventHandler>(string eventName) 
+            where TEventHandler : IDynamicEventHandler
         {
-            throw new NotImplementedException();
+            _manager.AddSubscription<TEventHandler>(eventName);
         }
 
         public void Unsubscribe<TEvent, TEventHandler>()
             where TEvent : IntegrationEvent
             where TEventHandler : IEventHandler<TEvent>
         {
-            throw new NotImplementedException();
+            _manager.RemoveSubscription<TEvent, TEventHandler>();
         }
 
         public void Unsubscribe<TEventHandler>(string eventName) where TEventHandler : IDynamicEventHandler
         {
-            throw new NotImplementedException();
+            _manager.RemoveSubscription<TEventHandler>(eventName);
         }
     }
 }

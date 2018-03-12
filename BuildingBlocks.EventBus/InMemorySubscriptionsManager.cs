@@ -64,18 +64,55 @@ namespace BuildingBlocks.EventBus
         public bool HasSubscriptionsForEvent(string eventName) =>
             _handlers.ContainsKey(eventName);
 
-        public IEnumerable GetHandlersForEvent<TEvent>()
+        public IEnumerable<Subscription> GetHandlersForEvent<TEvent>()
             where TEvent : IntegrationEvent
         {
             var key = typeof(TEvent).Name;
             return GetHandlersForEvent(key);
         }
 
-        public IEnumerable GetHandlersForEvent(string eventName)
+        public IEnumerable<Subscription> GetHandlersForEvent(string eventName)
             => _handlers[eventName];
 
         public Type GetEventTypeByName(string eventName) => _handlers[eventName]
             ?.FirstOrDefault(handler => !handler.IsDynamic)
             ?.EventType;
+
+        Subscription FindSubscriptionToRemove<TEventHandler>(string eventName)
+        {
+            if (!HasSubscriptionsForEvent(eventName))
+            {
+                return null;
+            }
+
+            return _handlers[eventName].SingleOrDefault(
+                s => s.HandlerType == typeof(TEventHandler));
+        }
+
+        public void RemoveSubscription<TEventHandler>(string eventName) where TEventHandler : IDynamicEventHandler
+        {
+            var handlerToRemove = FindSubscriptionToRemove<TEventHandler>(eventName);
+            RemoveSubscription(eventName, handlerToRemove);
+        }
+
+        public void RemoveSubscription<TEvent, TEventHandler>()
+            where TEvent : IntegrationEvent
+            where TEventHandler : IEventHandler<TEvent>
+        {
+            var eventName = typeof(TEvent).Name;
+            var handlerToRemove = FindSubscriptionToRemove<TEventHandler>(eventName);
+            RemoveSubscription(eventName, handlerToRemove);
+        }
+
+        private void RemoveSubscription(string eventName, Subscription subsToRemove)
+        {
+            if (subsToRemove == null) return;
+            _handlers[eventName].Remove(subsToRemove);
+
+            if (_handlers[eventName].Any()) return;
+
+            _handlers.Remove(eventName);
+            OnEventRemoved?.Invoke(this, eventName);
+        }
     }
 }
