@@ -13,14 +13,14 @@ namespace BuildingBlocks.EventBus.Abstractions
 
         void Subscribe<TEvent, TEventHandler>()
             where TEvent : IntegrationEvent
-            where TEventHandler : IEventHandler;
+            where TEventHandler : IEventHandler<TEvent>;
 
         void Subscribe<TEventHandler>(string eventName)
             where TEventHandler : IDynamicEventHandler;
 
         void Unsubscribe<TEvent, TEventHandler>()
             where TEvent : IntegrationEvent
-            where TEventHandler : IEventHandler;
+            where TEventHandler : IEventHandler<TEvent>;
 
         void Unsubscribe<TEventHandler>(string eventName)
             where TEventHandler : IDynamicEventHandler;
