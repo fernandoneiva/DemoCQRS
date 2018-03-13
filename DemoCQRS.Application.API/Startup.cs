@@ -1,5 +1,9 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
+using BuildingBlocks.EventBus;
+using BuildingBlocks.EventBus.Abstractions;
+using DemoCQRS.Application.Core.CommandStack;
+using DemoCQRS.Application.Core.CommandStack.Events;
 using DemoCQRS.Application.Core.CommandStack.Handlers;
 using MediatR;
 using Owin;
@@ -25,10 +29,7 @@ namespace DemoCQRS.Application.API
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
 
             app.UseWebApi(config);
-
-
-
-
+            
         }
 
         public static IContainer BuildContainer()
@@ -64,9 +65,23 @@ namespace DemoCQRS.Application.API
 
             builder.RegisterAssemblyTypes(typeof(FaturasCommandHandler).GetTypeInfo().Assembly).AsImplementedInterfaces(); // via assembly scan
 
+            builder.Register(ctx =>
+            {
+                var bus = new InMemoryEventBus(ctx.Resolve<ILifetimeScope>());
+
+                bus.Subscribe<SalvarFaturaCommand, FaturasCommandHandler>();
+                bus.Subscribe<NovaFaturaSalvaEvent, NovaFaturaSalvaEventHandler>();
+
+                return bus;
+            })
+            .AsImplementedInterfaces()
+            .SingleInstance();            
+
+            builder.RegisterType<InMemorySubscriptionsManager>()
+                .AsImplementedInterfaces()
+                .SingleInstance();
+
             return builder.Build();
         }
-
-
     }
 }
