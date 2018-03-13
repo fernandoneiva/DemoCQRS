@@ -40,7 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandStack\Commands\SalvarFaturaCommand.cs" />
+    <Compile Include="CommandStack\Events\NovaFaturaSalvaEvent.cs" />
     <Compile Include="CommandStack\Handlers\FaturasCommandHandler.cs" />
+    <Compile Include="CommandStack\Handlers\NovaFaturaSalvaEventHandler.cs" />
     <Compile Include="QueryStack\Queries\ListarFaturasCommand.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -51,10 +53,15 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BuildingBlocks.EventBus\BuildingBlocks.EventBus.csproj">
+      <Project>{FD7CA987-0C2F-4F67-80B8-7DAB1267DCB7}</Project>
+      <Name>BuildingBlocks.EventBus</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DemoCQRS.Domain.Core\DemoCQRS.Domain.Core.csproj">
       <Project>{4A56311E-AD6D-4BE8-9190-BB93758441B1}</Project>
       <Name>DemoCQRS.Domain.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,4 +1,6 @@
-﻿using DemoCQRS.Application.Core.CommandStack;
+﻿using BuildingBlocks.EventBus.Abstractions;
+using DemoCQRS.Application.Core.CommandStack;
+using DemoCQRS.Application.Core.CommandStack.Handlers;
 using MediatR;
 using System.Collections.Generic;
 using System.Web.Http;
@@ -8,9 +10,12 @@ namespace DemoCQRS.Application.API
     public class HomeController : ApiController
     {
         IMediator mediator;
-        public HomeController(IMediator _mediator)
+        IEventBus eventBus;
+        public HomeController(IMediator _mediator, IEventBus _eventBus)
         {
             mediator = _mediator;
+            eventBus = _eventBus;
+            
         }
 
         // GET api/values 
@@ -22,6 +27,7 @@ namespace DemoCQRS.Application.API
         // GET api/values/5 
         public string Get(int id)
         {
+            eventBus.Publish(new SalvarFaturaCommand());
             mediator.Send(new SalvarFaturaCommand());
 
             return "value";

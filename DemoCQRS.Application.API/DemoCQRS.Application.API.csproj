@@ -126,6 +126,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BuildingBlocks.EventBus\BuildingBlocks.EventBus.csproj">
+      <Project>{fd7ca987-0c2f-4f67-80b8-7dab1267dcb7}</Project>
+      <Name>BuildingBlocks.EventBus</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DemoCQRS.Application.Core\DemoCQRS.Application.Core.csproj">
       <Project>{A8BA28DD-D103-40F4-B409-D9C2A21A50C5}</Project>
       <Name>DemoCQRS.Application.Core</Name>
